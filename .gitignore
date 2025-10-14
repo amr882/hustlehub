@@ -51,3 +51,4 @@ windows/flutter/generated_plugin_registrant.cc
 firebase.json
 pubspec.lock
 .gitignore
+ios/Runner/GoogleService-Info.plist
