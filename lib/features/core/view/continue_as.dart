@@ -59,7 +59,7 @@ class _ContinueAsState extends State<ContinueAs> {
                         Align(
                           alignment: Alignment.center,
                           child: Image.asset(
-                            "assets/freelancer.png",
+                            "assets/account/freelancer.png",
                             height: 7.h,
                           ),
                         ),
@@ -99,7 +99,10 @@ class _ContinueAsState extends State<ContinueAs> {
                         ),
                         Align(
                           alignment: Alignment.center,
-                          child: Image.asset("assets/client.png", height: 7.h),
+                          child: Image.asset(
+                            "assets/account/client.png",
+                            height: 7.h,
+                          ),
                         ),
                         Align(
                           alignment: Alignment.center,

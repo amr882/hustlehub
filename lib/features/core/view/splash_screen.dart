@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hustlehub/features/core/auth/log_in/log_in_view.dart';
-import 'package:hustlehub/features/core/view/continue_as.dart';
 import 'package:sizer/sizer.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -28,7 +27,10 @@ class SplashScreen extends StatelessWidget {
 
             Align(
               alignment: AlignmentGeometry.center,
-              child: Image.asset("assets/onboarding_image.png", height: 35.h),
+              child: Image.asset(
+                "assets/account/onboarding_image.png",
+                height: 35.h,
+              ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w),
