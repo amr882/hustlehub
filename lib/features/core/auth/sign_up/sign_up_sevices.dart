@@ -6,28 +6,14 @@ import 'package:flutter/material.dart';
 class AccountCreation {
   createAccount(String emailAddress, password, BuildContext context) async {
     try {
-      final credential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-            email: emailAddress,
-            password: password,
-          );
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailAddress,
+        password: password,
+      );
+      Navigator.of(
+        context,
+      ).pushNamedAndRemoveUntil("continue_as", (context) => false);
     } on FirebaseAuthException catch (e) {
-      if (!RegExp(
-            "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]",
-          ).hasMatch(emailAddress) ||
-          emailAddress.isEmpty) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("enter valid email")));
-        return;
-      }
-
-      if (password.isEmpty) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("not valid.")));
-        return;
-      }
       print(e);
     }
   }

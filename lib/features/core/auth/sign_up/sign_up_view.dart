@@ -131,18 +131,28 @@ class _SignUpViewState extends State<SignUpView> {
                 padding: EdgeInsets.symmetric(vertical: 2.h),
                 child: CustomButton(
                   onTap: () {
-                    if (_emailController.text.isNotEmpty &&
-                        _passwordController.text.isNotEmpty) {
-                      AccountCreation().createAccount(
-                        _emailController.text,
-                        _passwordController.text,
-                        context,
+                    if (!RegExp(
+                          "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]",
+                        ).hasMatch(_emailController.text) ||
+                        _emailController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("enter valid email")),
                       );
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                        "continue_as",
-                        (context) => false,
-                      );
+                      return;
                     }
+
+                    if (_passwordController.text.isEmpty) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text("not valid.")));
+                      return;
+                    }
+
+                    AccountCreation().createAccount(
+                      _emailController.text,
+                      _passwordController.text,
+                      context,
+                    );
                   },
                   title: "Sign up",
                   width: 80.w,

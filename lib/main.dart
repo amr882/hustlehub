@@ -2,8 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:hustlehub/features/client/view/client_home_page.dart';
+import 'package:hustlehub/features/core/auth/user_db.dart';
 import 'package:hustlehub/features/core/view/continue_as.dart';
+import 'package:hustlehub/features/core/view/onboarding.dart';
 import 'package:hustlehub/features/core/view/splash_screen.dart';
+import 'package:hustlehub/features/freelancer/view/freelancer_home_page.dart';
 import 'package:hustlehub/firebase_options.dart';
 import 'package:sizer/sizer.dart';
 
@@ -24,26 +28,48 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
-  void initState() {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user == null) {
-        print('User is currently signed out!');
-      } else {
-        print('User is signed in!');
-      }
-    });
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Sizer(
       builder: (context, orientation, screenType) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: SplashScreen(),
-          routes: {"continue_as": (context) => ContinueAs()},
+          home: StreamBuilder<User?>(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const SplashScreen();
+              }
+
+              final User? user = snapshot.data;
+
+              if (user == null) {
+                return const Onboarding();
+              } else {
+                return FutureBuilder<String?>(
+                  future: UserDb().getUserState(),
+                  builder: (context, roleSnapshot) {
+                    if (roleSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return Scaffold(
+                        body: Center(child: CircularProgressIndicator()),
+                      );
+                    }
+
+                    final String? userRole = roleSnapshot.data;
+
+                    if (userRole == 'freelancer') {
+                      return const FreelancerHomePage();
+                    } else if (userRole == 'client') {
+                      return const ClientHomePage();
+                    } else {
+                      return const ContinueAs();
+                    }
+                  },
+                );
+              }
+            },
+          ),
+          routes: {"continue_as": (context) => const ContinueAs()},
         );
       },
     );
