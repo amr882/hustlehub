@@ -9,12 +9,6 @@ class FreelancerHomePage extends StatefulWidget {
 
 class _FreelancerHomePageState extends State<FreelancerHomePage> {
   @override
-  void initState() {
-    print("freelancee home page+++++++++++++++++++++");
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(body: Center(child: Text("freelancer")));
   }

@@ -1,30 +1,28 @@
-// user_db.dart
+// In a file like user_db.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class UserDb {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  Future<String?> getUserState() async {
-    final User? user = _firebaseAuth.currentUser;
-    if (user == null) {
+
+  Future<Map<String, dynamic>?> getUserData() async {
+    String? uid = _firebaseAuth.currentUser?.uid;
+    if (uid == null) {
       return null;
     }
-
     try {
-      final querySnapshot = await _firebaseFirestore
-          .collection('freelancer')
-          .where('freelancer_id', isEqualTo: user.uid)
-          .limit(1)
+      DocumentSnapshot doc = await _firebaseFirestore
+          .collection("freelancer")
+          .doc(uid)
           .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        return querySnapshot.docs.first.data()['user_role'] as String?;
+      if (doc.exists) {
+        return doc.data() as Map<String, dynamic>?;
+      } else {
+        return null;
       }
-
-      return 'client';
     } catch (e) {
-      print("Error fetching user state: $e");
+      print("Error fetching user data: $e");
       return null;
     }
   }

@@ -4,16 +4,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hustlehub/features/freelancer/auth/freelancer_setup_account/user_info/widget/freelancer_info_card.dart';
 import 'package:sizer/sizer.dart';
 
-List<String> levelOtions = ["intern", "mid", "expert"];
+List<String> goalOtions = ["main income", "experience", "not sure"];
 
-class UserExperience extends StatelessWidget {
-  final void Function(String?) experienceValue;
-  final String selectedExperience;
+class YourGoal extends StatelessWidget {
+  final void Function(String?) goalValue;
+  final String selectedGoal;
 
-  const UserExperience({
+  const YourGoal({
     super.key,
-    required this.experienceValue,
-    required this.selectedExperience,
+    required this.goalValue,
+    required this.selectedGoal,
   });
 
   @override
@@ -22,53 +22,54 @@ class UserExperience extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "have you freelanced before?",
+          "What's your biggest goal for freelancing?",
+          textAlign: TextAlign.center,
           style: GoogleFonts.dmSans(fontSize: 3.h, fontWeight: FontWeight.bold),
         ),
 
-        // Intern
+        // money
         FreelancerInfoCard(
-          color: selectedExperience == levelOtions[0]
+          color: selectedGoal == goalOtions[0]
               ? Colors.green
               : const Color.fromARGB(183, 199, 199, 199),
           radio: Radio(
-            value: levelOtions[0],
-            groupValue: selectedExperience,
-            onChanged: experienceValue,
+            value: goalOtions[0],
+            groupValue: selectedGoal,
+            onChanged: goalValue,
           ),
-          image: "assets/account/intern.png",
-          state: "intern",
+          image: "assets/account/main_income.png",
+          state: "main income",
           height: 8.h,
         ),
 
-        // mid
+        // exp
         FreelancerInfoCard(
-          color: selectedExperience == levelOtions[1]
+          color: selectedGoal == goalOtions[1]
               ? Colors.green
               : const Color.fromARGB(183, 199, 199, 199),
           radio: Radio(
-            value: levelOtions[1],
-            groupValue: selectedExperience,
-            onChanged: experienceValue,
+            value: goalOtions[1],
+            groupValue: selectedGoal,
+            onChanged: goalValue,
           ),
-          image: "assets/account/mid.png",
-          state: "mid",
+          image: "assets/account/experience medal.png",
+          state: "experience",
           height: 8.h,
         ),
 
-        // expert
+        // not sure
         FreelancerInfoCard(
-          color: selectedExperience == levelOtions[2]
+          color: selectedGoal == goalOtions[2]
               ? Colors.green
               : const Color.fromARGB(183, 199, 199, 199),
           radio: Radio(
-            value: levelOtions[2],
-            groupValue: selectedExperience,
-            onChanged: experienceValue,
+            value: goalOtions[2],
+            groupValue: selectedGoal,
+            onChanged: goalValue,
           ),
-          image: "assets/account/expert.png",
-          state: "expert",
+          image: "assets/account/not sure.png",
           height: 8.h,
+          state: "not sure",
         ),
       ],
     );

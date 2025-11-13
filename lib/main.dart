@@ -2,11 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:hustlehub/features/client/view/client_account_setup.dart';
 import 'package:hustlehub/features/client/view/client_home_page.dart';
 import 'package:hustlehub/features/core/auth/user_db.dart';
 import 'package:hustlehub/features/core/view/continue_as.dart';
 import 'package:hustlehub/features/core/view/onboarding.dart';
-import 'package:hustlehub/features/core/view/splash_screen.dart';
+import 'package:hustlehub/features/freelancer/auth/freelancer_setup_account/freelancer_setup_account.dart';
 import 'package:hustlehub/features/freelancer/view/freelancer_home_page.dart';
 import 'package:hustlehub/firebase_options.dart';
 import 'package:sizer/sizer.dart';
@@ -36,31 +37,34 @@ class _MyAppState extends State<MyApp> {
           home: StreamBuilder<User?>(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const SplashScreen();
-              }
-
               final User? user = snapshot.data;
 
               if (user == null) {
                 return const Onboarding();
               } else {
-                return FutureBuilder<String?>(
-                  future: UserDb().getUserState(),
-                  builder: (context, roleSnapshot) {
-                    if (roleSnapshot.connectionState ==
+                return FutureBuilder<Map<String, dynamic>?>(
+                  future: UserDb().getUserData(),
+                  builder: (context, dataSnapshot) {
+                    if (dataSnapshot.connectionState ==
                         ConnectionState.waiting) {
-                      return Scaffold(
+                      return const Scaffold(
                         body: Center(child: CircularProgressIndicator()),
                       );
                     }
 
-                    final String? userRole = roleSnapshot.data;
+                    final Map<String, dynamic>? userData = dataSnapshot.data;
+                    final String? userRole = userData?['user_role'] as String?;
+                    final bool accountSetup =
+                        userData?['account_setup'] as bool? ?? false;
 
                     if (userRole == 'freelancer') {
-                      return const FreelancerHomePage();
+                      return accountSetup
+                          ? const FreelancerHomePage()
+                          : const FreelancerSetupPage();
                     } else if (userRole == 'client') {
-                      return const ClientHomePage();
+                      return accountSetup
+                          ? const ClientHomePage()
+                          : const ClientAccountSetup();
                     } else {
                       return const ContinueAs();
                     }

@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:hustlehub/features/core/widgets/custom_button.dart';
+import 'package:hustlehub/features/freelancer/auth/freelancer_db.dart';
 import 'package:hustlehub/features/freelancer/auth/freelancer_setup_account/user_info/experience.dart';
+import 'package:hustlehub/features/freelancer/auth/freelancer_setup_account/user_info/work_role.dart';
+import 'package:hustlehub/features/freelancer/auth/freelancer_setup_account/user_info/your_goal.dart';
 import 'package:sizer/sizer.dart';
 
-class FreelancerSetupAccount extends StatefulWidget {
-  const FreelancerSetupAccount({super.key});
+class FreelancerSetupPage extends StatefulWidget {
+  const FreelancerSetupPage({super.key});
 
   @override
-  State<FreelancerSetupAccount> createState() => _FreelancerSetupAccountState();
+  State<FreelancerSetupPage> createState() => _FreelancerSetupAccountState();
 }
 
-class _FreelancerSetupAccountState extends State<FreelancerSetupAccount> {
+class _FreelancerSetupAccountState extends State<FreelancerSetupPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
   String _freelancerExperienceOption = levelOtions[0];
+  String _freelancerGoalOption = goalOtions[0];
   Map userInfo = {};
 
   @override
   void initState() {
+    freelancerDb();
     updateUserInfo();
     super.initState();
+
     _pageController.addListener(_updateCurrentPage);
   }
 
@@ -40,6 +46,10 @@ class _FreelancerSetupAccountState extends State<FreelancerSetupAccount> {
     }
   }
 
+  freelancerDb() async {
+    await FreelancerDb().addFreelancer();
+  }
+
   changePage() {
     _pageController.nextPage(
       duration: const Duration(milliseconds: 200),
@@ -49,11 +59,34 @@ class _FreelancerSetupAccountState extends State<FreelancerSetupAccount> {
 
   void updateUserInfo() {
     userInfo["experience"] = _freelancerExperienceOption;
+    userInfo["userGoal"] = _freelancerGoalOption;
     print("$userInfo ++++++++++++++++++");
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> children = [
+      UserExperience(
+        selectedExperience: _freelancerExperienceOption,
+        experienceValue: (value) {
+          setState(() {
+            _freelancerExperienceOption = value.toString();
+            updateUserInfo();
+          });
+        },
+      ),
+
+      YourGoal(
+        selectedGoal: _freelancerGoalOption,
+        goalValue: (value) {
+          setState(() {
+            _freelancerGoalOption = value.toString();
+            updateUserInfo();
+          });
+        },
+      ),
+      WorkRole(),
+    ];
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -85,23 +118,11 @@ class _FreelancerSetupAccountState extends State<FreelancerSetupAccount> {
               Expanded(
                 child: PageView(
                   controller: _pageController,
-                  children: [
-                    UserExperience(
-                      selectedExperience: _freelancerExperienceOption,
-
-                      experienceValue: (value) {
-                        setState(() {
-                          _freelancerExperienceOption = value.toString();
-
-                          updateUserInfo();
-                        });
-                      },
-                    ),
-                  ],
+                  children: children,
                 ),
               ),
               CustomButton(
-                onTap: () {
+                onTap: () async {
                   changePage();
                 },
                 title: "Continue",

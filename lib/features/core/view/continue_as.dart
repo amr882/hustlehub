@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hustlehub/features/freelancer/auth/freelancer_db.dart';
 import 'package:hustlehub/features/freelancer/auth/freelancer_setup_account/freelancer_setup_account.dart';
 import 'package:sizer/sizer.dart';
 
@@ -128,17 +127,10 @@ class _ContinueAsState extends State<ContinueAs> {
 
                 GestureDetector(
                   onTap: () async {
-                    if (currentOption == groubOtions[0]) {
-                      await FreelancerDb().addFreelancer();
-                      print("freelancer ++++++++++++++++");
-                    } else {
-                      print("client++++++++++++++++++++++++++++++++");
-                    }
-
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => currentOption == "freelancer"
-                            ? FreelancerSetupAccount()
+                            ? FreelancerSetupPage()
                             : ContinueAs(),
                       ),
                     );

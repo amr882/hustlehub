@@ -52,3 +52,4 @@ firebase.json
 pubspec.lock
 .gitignore
 ios/Runner/GoogleService-Info.plist
+lib/features/core/keys.dart
