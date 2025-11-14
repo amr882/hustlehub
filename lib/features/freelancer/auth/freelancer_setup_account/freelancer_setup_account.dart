@@ -20,32 +20,31 @@ class _FreelancerSetupAccountState extends State<FreelancerSetupPage> {
   String _freelancerExperienceOption = levelOtions[0];
   String _freelancerGoalOption = goalOtions[0];
   Map userInfo = {};
-  late final List<Widget> children;
+  List<Widget> get children => [
+    UserExperience(
+      selectedExperience: _freelancerExperienceOption,
+      experienceValue: (value) {
+        setState(() {
+          _freelancerExperienceOption = value.toString();
+          updateUserInfo();
+        });
+      },
+    ),
 
+    YourGoal(
+      selectedGoal: _freelancerGoalOption,
+      goalValue: (value) {
+        setState(() {
+          _freelancerGoalOption = value.toString();
+          updateUserInfo();
+        });
+      },
+    ),
+
+    WorkRole(),
+  ];
   @override
   void initState() {
-    children = [
-      UserExperience(
-        selectedExperience: _freelancerExperienceOption,
-        experienceValue: (value) {
-          setState(() {
-            _freelancerExperienceOption = value.toString();
-            updateUserInfo();
-          });
-        },
-      ),
-      YourGoal(
-        selectedGoal: _freelancerGoalOption,
-        goalValue: (value) {
-          setState(() {
-            _freelancerGoalOption = value.toString();
-            updateUserInfo();
-          });
-        },
-      ),
-      WorkRole(),
-    ];
-
     freelancerDb();
     updateUserInfo();
     super.initState();
