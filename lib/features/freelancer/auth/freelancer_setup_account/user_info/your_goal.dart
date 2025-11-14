@@ -27,11 +27,15 @@ class YourGoal extends StatelessWidget {
           style: GoogleFonts.dmSans(fontSize: 3.h, fontWeight: FontWeight.bold),
         ),
 
-        // money
         FreelancerInfoCard(
           color: selectedGoal == goalOtions[0]
               ? Colors.green
               : const Color.fromARGB(183, 199, 199, 199),
+
+          cardValue: goalOtions[0],
+          groupValue: selectedGoal,
+          onChanged: goalValue,
+
           radio: Radio(
             value: goalOtions[0],
             groupValue: selectedGoal,
@@ -42,11 +46,15 @@ class YourGoal extends StatelessWidget {
           height: 8.h,
         ),
 
-        // exp
         FreelancerInfoCard(
           color: selectedGoal == goalOtions[1]
               ? Colors.green
               : const Color.fromARGB(183, 199, 199, 199),
+
+          cardValue: goalOtions[1],
+          groupValue: selectedGoal,
+          onChanged: goalValue,
+
           radio: Radio(
             value: goalOtions[1],
             groupValue: selectedGoal,
@@ -57,11 +65,15 @@ class YourGoal extends StatelessWidget {
           height: 8.h,
         ),
 
-        // not sure
         FreelancerInfoCard(
           color: selectedGoal == goalOtions[2]
               ? Colors.green
               : const Color.fromARGB(183, 199, 199, 199),
+
+          cardValue: goalOtions[2],
+          groupValue: selectedGoal,
+          onChanged: goalValue,
+
           radio: Radio(
             value: goalOtions[2],
             groupValue: selectedGoal,

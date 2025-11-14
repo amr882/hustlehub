@@ -26,11 +26,15 @@ class UserExperience extends StatelessWidget {
           style: GoogleFonts.dmSans(fontSize: 3.h, fontWeight: FontWeight.bold),
         ),
 
-        // Intern
         FreelancerInfoCard(
           color: selectedExperience == levelOtions[0]
               ? Colors.green
               : const Color.fromARGB(183, 199, 199, 199),
+
+          cardValue: levelOtions[0],
+          groupValue: selectedExperience,
+          onChanged: experienceValue,
+
           radio: Radio(
             value: levelOtions[0],
             groupValue: selectedExperience,
@@ -41,11 +45,15 @@ class UserExperience extends StatelessWidget {
           height: 8.h,
         ),
 
-        // mid
         FreelancerInfoCard(
           color: selectedExperience == levelOtions[1]
               ? Colors.green
               : const Color.fromARGB(183, 199, 199, 199),
+
+          cardValue: levelOtions[1],
+          groupValue: selectedExperience,
+          onChanged: experienceValue,
+
           radio: Radio(
             value: levelOtions[1],
             groupValue: selectedExperience,
@@ -56,11 +64,15 @@ class UserExperience extends StatelessWidget {
           height: 8.h,
         ),
 
-        // expert
         FreelancerInfoCard(
           color: selectedExperience == levelOtions[2]
               ? Colors.green
               : const Color.fromARGB(183, 199, 199, 199),
+
+          cardValue: levelOtions[2],
+          groupValue: selectedExperience,
+          onChanged: experienceValue,
+
           radio: Radio(
             value: levelOtions[2],
             groupValue: selectedExperience,
