@@ -4,6 +4,8 @@ import 'package:hustlehub/features/freelancer/auth/freelancer_db.dart';
 import 'package:hustlehub/features/freelancer/auth/freelancer_setup_account/user_info/experience.dart';
 import 'package:hustlehub/features/freelancer/auth/freelancer_setup_account/user_info/work_role.dart';
 import 'package:hustlehub/features/freelancer/auth/freelancer_setup_account/user_info/your_goal.dart';
+import 'package:hustlehub/features/freelancer/providers/work_role_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class FreelancerSetupPage extends StatefulWidget {
@@ -26,7 +28,6 @@ class _FreelancerSetupAccountState extends State<FreelancerSetupPage> {
       experienceValue: (value) {
         setState(() {
           _freelancerExperienceOption = value.toString();
-          updateUserInfo();
         });
       },
     ),
@@ -36,12 +37,12 @@ class _FreelancerSetupAccountState extends State<FreelancerSetupPage> {
       goalValue: (value) {
         setState(() {
           _freelancerGoalOption = value.toString();
-          updateUserInfo();
         });
       },
     ),
 
-    WorkRole(),
+    const WorkRole(),
+    Container(),
   ];
   @override
   void initState() {
@@ -73,6 +74,21 @@ class _FreelancerSetupAccountState extends State<FreelancerSetupPage> {
   }
 
   void nextPage() {
+    final workRoleProvider = Provider.of<WorkRoleProvider>(
+      context,
+      listen: false,
+    );
+
+    if (_currentPage == 2) {
+      if (workRoleProvider.selectedCount < 1) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Please choose at least 1 work role category."),
+          ),
+        );
+        return;
+      }
+    }
     if (_currentPage < children.length - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 200),
@@ -93,13 +109,19 @@ class _FreelancerSetupAccountState extends State<FreelancerSetupPage> {
   }
 
   void _completeSetup() {
+    updateUserInfo();
+
     print("Setup Complete! Final Data: $userInfo");
   }
 
   void updateUserInfo() {
+    final workRoleProvider = Provider.of<WorkRoleProvider>(
+      context,
+      listen: false,
+    );
     userInfo["experience"] = _freelancerExperienceOption;
     userInfo["userGoal"] = _freelancerGoalOption;
-    print("$userInfo ++++++++++++++++++");
+    userInfo["workRoles"] = workRoleProvider.selectedRolesList;
   }
 
   @override
@@ -147,7 +169,7 @@ class _FreelancerSetupAccountState extends State<FreelancerSetupPage> {
               Expanded(
                 child: PageView(
                   controller: _pageController,
-                  physics: const NeverScrollableScrollPhysics(),
+                  physics: BouncingScrollPhysics(),
                   children: children,
                 ),
               ),

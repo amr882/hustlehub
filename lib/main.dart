@@ -8,8 +8,10 @@ import 'package:hustlehub/features/core/auth/user_db.dart';
 import 'package:hustlehub/features/core/view/continue_as.dart';
 import 'package:hustlehub/features/core/view/onboarding.dart';
 import 'package:hustlehub/features/freelancer/auth/freelancer_setup_account/freelancer_setup_account.dart';
+import 'package:hustlehub/features/freelancer/providers/work_role_provider.dart';
 import 'package:hustlehub/features/freelancer/view/freelancer_home_page.dart';
 import 'package:hustlehub/firebase_options.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 Future<void> main() async {
@@ -34,44 +36,52 @@ class _MyAppState extends State<MyApp> {
       builder: (context, orientation, screenType) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: StreamBuilder<User?>(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) {
-              final User? user = snapshot.data;
+          home: MultiProvider(
+            providers: [
+              ChangeNotifierProvider<WorkRoleProvider>(
+                create: (_) => WorkRoleProvider(),
+              ),
+            ],
+            child: StreamBuilder<User?>(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                final User? user = snapshot.data;
 
-              if (user == null) {
-                return const Onboarding();
-              } else {
-                return FutureBuilder<Map<String, dynamic>?>(
-                  future: UserDb().getUserData(),
-                  builder: (context, dataSnapshot) {
-                    if (dataSnapshot.connectionState ==
-                        ConnectionState.waiting) {
-                      return const Scaffold(
-                        body: Center(child: CircularProgressIndicator()),
-                      );
-                    }
+                if (user == null) {
+                  return const Onboarding();
+                } else {
+                  return FutureBuilder<Map<String, dynamic>?>(
+                    future: UserDb().getUserData(),
+                    builder: (context, dataSnapshot) {
+                      if (dataSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Scaffold(
+                          body: Center(child: CircularProgressIndicator()),
+                        );
+                      }
 
-                    final Map<String, dynamic>? userData = dataSnapshot.data;
-                    final String? userRole = userData?['user_role'] as String?;
-                    final bool accountSetup =
-                        userData?['account_setup'] as bool? ?? false;
+                      final Map<String, dynamic>? userData = dataSnapshot.data;
+                      final String? userRole =
+                          userData?['user_role'] as String?;
+                      final bool accountSetup =
+                          userData?['account_setup'] as bool? ?? false;
 
-                    if (userRole == 'freelancer') {
-                      return accountSetup
-                          ? const FreelancerHomePage()
-                          : const FreelancerSetupPage();
-                    } else if (userRole == 'client') {
-                      return accountSetup
-                          ? const ClientHomePage()
-                          : const ClientAccountSetup();
-                    } else {
-                      return const ContinueAs();
-                    }
-                  },
-                );
-              }
-            },
+                      if (userRole == 'freelancer') {
+                        return accountSetup
+                            ? const FreelancerHomePage()
+                            : const FreelancerSetupPage();
+                      } else if (userRole == 'client') {
+                        return accountSetup
+                            ? const ClientHomePage()
+                            : const ClientAccountSetup();
+                      } else {
+                        return const ContinueAs();
+                      }
+                    },
+                  );
+                }
+              },
+            ),
           ),
           routes: {"continue_as": (context) => const ContinueAs()},
         );
@@ -79,9 +89,6 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
-
-
 
 
 
